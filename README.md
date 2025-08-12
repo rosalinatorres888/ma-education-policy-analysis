@@ -1,9 +1,4 @@
 
-
-# 🎯 [CLICK HERE FOR LIVE INTERACTIVE PRESENTATION](https://rosalinatorres888.github.io/ma-education-policy-analysis/) 🎯
-
-</div>
-
 ---
 
 # 📊 Massachusetts Education Policy Analysis: Data-Driven Insights for Strategic Investment
