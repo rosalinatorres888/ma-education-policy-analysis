@@ -1,0 +1,34 @@
+# Python
+*.pyc
+__pycache__/
+.ipynb_checkpoints/
+*.egg-info/
+dist/
+build/
+
+# Environment
+.env
+venv/
+env/
+.venv
+
+# Data files (keep raw data out of version control)
+data/raw/*.csv
+data/raw/*.xlsx
+*.pkl
+*.h5
+
+# ML Models
+models/*.joblib
+models/*.h5
+models/*.pt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Logs
+*.log
+logs/
