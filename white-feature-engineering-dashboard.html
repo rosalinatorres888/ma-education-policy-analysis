@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature Engineering for Policy Analysis - Interactive Visualizations</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fafbfc;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #355C7D 0%, #6C5B7B 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            color: #F8B195;
+        }
+        
+        .content {
+            padding: 40px;
+            background: #ffffff;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            color: #355C7D;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #F67280;
+            font-weight: 600;
+        }
+        
+        .chart-container {
+            background: #fafbfc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid #e8d3d8;
+            box-shadow: 0 2px 8px rgba(192, 108, 132, 0.08);
+        }
+        
+        .chart-title {
+            font-size: 1.3rem;
+            color: #355C7D;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #355C7D 0%, #6C5B7B 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(108, 91, 123, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(108, 91, 123, 0.3);
+        }
+        
+        .metric-card:nth-child(1) {
+            background: linear-gradient(135deg, #F67280 0%, #C06C84 100%);
+        }
+        
+        .metric-card:nth-child(2) {
+            background: linear-gradient(135deg, #C06C84 0%, #6C5B7B 100%);
+        }
+        
+        .metric-card:nth-child(3) {
+            background: linear-gradient(135deg, #6C5B7B 0%, #355C7D 100%);
+        }
+        
+        .metric-card:nth-child(4) {
+            background: linear-gradient(135deg, #355C7D 0%, #4a6fa5 100%);
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .metric-label {
+            font-size: 0.9rem;
+            opacity: 0.95;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+        
+        .insight-box {
+            background: linear-gradient(135deg, #fff5f7 0%, #fce4ec 100%);
+            color: #355C7D;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 30px 0;
+            border-left: 4px solid #F67280;
+            box-shadow: 0 2px 8px rgba(246, 114, 128, 0.1);
+        }
+        
+        .insight-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            color: #355C7D;
+        }
+        
+        .insight-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .insight-box li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #6C5B7B;
+        }
+        
+        .insight-box li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            color: #F67280;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(108, 91, 123, 0.08);
+            border: 1px solid #e8d3d8;
+        }
+        
+        .comparison-table thead {
+            background: linear-gradient(135deg, #355C7D 0%, #6C5B7B 100%);
+            color: white;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+        }
+        
+        .comparison-table tbody tr:nth-child(even) {
+            background: #fafbfc;
+        }
+        
+        .comparison-table tbody tr:hover {
+            background: #fff5f7;
+        }
+        
+        .comparison-table tbody tr {
+            border-bottom: 1px solid #e8d3d8;
+        }
+        
+        .comparison-table tbody tr:last-child {
+            border-bottom: none;
+        }
+        
+        .improvement {
+            color: #C06C84;
+            font-weight: 600;
+        }
+        
+        .code-block {
+            background: #2d2438;
+            color: #F8B195;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            box-shadow: 0 2px 8px rgba(53, 92, 125, 0.1);
+        }
+        
+        .code-comment {
+            color: #96ceb4;
+        }
+        
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e8d3d8;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            color: #6C5B7B;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+        }
+        
+        .tab.active {
+            color: #355C7D;
+            border-bottom-color: #F67280;
+        }
+        
+        .tab:hover {
+            color: #355C7D;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Feature Engineering for Policy Analysis</h1>
+            <p>Interactive Visualizations: Massachusetts Education Case Study</p>
+        </div>
+        
+        <div class="content">
+            <!-- Performance Metrics Section -->
+            <div class="section">
+                <h2 class="section-title">Model Performance Impact</h2>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">+32.8%</div>
+                        <div class="metric-label">R² Score Improvement</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">-41.9%</div>
+                        <div class="metric-label">RMSE Reduction</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">17</div>
+                        <div class="metric-label">Engineered Features</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">4.2x</div>
+                        <div class="metric-label">Best Policy ROI</div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-title">Before vs After Feature Engineering</div>
+                    <div id="performanceComparison"></div>
+                </div>
+            </div>
+            
+            <!-- Feature Importance Section -->
+            <div class="section">
+                <h2 class="section-title">Feature Importance Analysis</h2>
+                
+                <div class="chart-container">
+                    <div class="chart-title">Top 10 Most Important Engineered Features (SHAP Values)</div>
+                    <div id="featureImportance"></div>
+                </div>
+                
+                <div class="insight-box">
+                    <h3>💡 Key Insights from Feature Importance</h3>
+                    <ul>
+                        <li>Human Capital Index contributes 24% to predictions</li>
+                        <li>Interaction terms outperform individual features by 3x</li>
+                        <li>Polynomial features capture critical non-linearities</li>
+                        <li>Domain-specific indices provide interpretable insights</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Feature Categories Section -->
+            <div class="section">
+                <h2 class="section-title">Feature Engineering Categories</h2>
+                
+                <div class="tab-container">
+                    <button class="tab active" onclick="showTab('interactions')">Interactions</button>
+                    <button class="tab" onclick="showTab('polynomial')">Polynomial</button>
+                    <button class="tab" onclick="showTab('indices')">Domain Indices</button>
+                    <button class="tab" onclick="showTab('ratios')">Ratios</button>
+                </div>
+                
+                <div id="interactions" class="tab-content active">
+                    <div class="chart-container">
+                        <div class="chart-title">Interaction Features Impact</div>
+                        <div id="interactionChart"></div>
+                    </div>
+                </div>
+                
+                <div id="polynomial" class="tab-content">
+                    <div class="chart-container">
+                        <div class="chart-title">Non-Linear Relationships</div>
+                        <div id="polynomialChart"></div>
+                    </div>
+                </div>
+                
+                <div id="indices" class="tab-content">
+                    <div class="chart-container">
+                        <div class="chart-title">Policy-Specific Indices</div>
+                        <div id="indicesChart"></div>
+                    </div>
+                </div>
+                
+                <div id="ratios" class="tab-content">
+                    <div class="chart-container">
+                        <div class="chart-title">Efficiency Ratios</div>
+                        <div id="ratiosChart"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Correlation Analysis Section -->
+            <div class="section">
+                <h2 class="section-title">Feature Correlation Analysis</h2>
+                
+                <div class="chart-container">
+                    <div class="chart-title">Correlation Heatmap: Engineered Features</div>
+                    <div id="correlationHeatmap"></div>
+                </div>
+            </div>
+            
+            <!-- Policy Impact Section -->
+            <div class="section">
+                <h2 class="section-title">Policy Impact Visualization</h2>
+                
+                <div class="chart-container">
+                    <div class="chart-title">Poverty-Education Interaction Effect</div>
+                    <div id="policyImpact"></div>
+                </div>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Feature Type</th>
+                            <th>Example Feature</th>
+                            <th>Policy Insight</th>
+                            <th>Impact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Interaction</td>
+                            <td>poverty_education_interaction</td>
+                            <td>Education impact varies with poverty</td>
+                            <td class="improvement">+2.3x in high-poverty areas</td>
+                        </tr>
+                        <tr>
+                            <td>Polynomial</td>
+                            <td>education_squared</td>
+                            <td>Diminishing returns threshold at 50%</td>
+                            <td class="improvement">Optimal investment point identified</td>
+                        </tr>
+                        <tr>
+                            <td>Domain Index</td>
+                            <td>human_capital_index</td>
+                            <td>Workforce development priority areas</td>
+                            <td class="improvement">24% prediction contribution</td>
+                        </tr>
+                        <tr>
+                            <td>Ratio</td>
+                            <td>teacher_effectiveness</td>
+                            <td>Optimal salary range: 1.4-1.6x median income</td>
+                            <td class="improvement">15% efficiency gain</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- ROI Analysis Section -->
+            <div class="section">
+                <h2 class="section-title">Return on Investment Analysis</h2>
+                
+                <div class="chart-container">
+                    <div class="chart-title">Policy ROI with Engineered Features</div>
+                    <div id="roiAnalysis"></div>
+                </div>
+            </div>
+            
+            <!-- Feature Engineering Process -->
+            <div class="section">
+                <h2 class="section-title">Feature Engineering Pipeline</h2>
+                
+                <div class="chart-container">
+                    <div class="chart-title">Feature Engineering Workflow</div>
+                    <div id="pipelineFlow"></div>
+                </div>
+                
+                <div class="code-block">
+                    <span class="code-comment"># Example: Creating the Human Capital Index</span><br>
+                    df['human_capital_index'] = (<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;df['education_bachelor_plus'] * <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;df['gdp_per_capita'] / <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;(df['overall_poverty_rate'] + 1)<br>
+                    )<br><br>
+                    <span class="code-comment"># Result: Most predictive feature with 24% SHAP contribution</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // New color palette from the image
+        const colors = {
+            peach: '#F8B195',
+            coral: '#F67280',
+            mauve: '#C06C84',
+            purple: '#6C5B7B',
+            navy: '#355C7D',
+            lightPeach: '#fce4e4',
+            lightCoral: '#ffd3d6'
+        };
+        
+        // Performance Comparison Chart
+        var performanceData = {
+            x: ['R² Score', 'RMSE', 'MAE', 'CV Score'],
+            y: [0.67, 12.4, 9.8, 0.64],
+            name: 'Basic Features',
+            type: 'bar',
+            marker: {color: '#C06C84'}
+        };
+        
+        var performanceData2 = {
+            x: ['R² Score', 'RMSE', 'MAE', 'CV Score'],
+            y: [0.89, 7.2, 5.1, 0.87],
+            name: 'Engineered Features',
+            type: 'bar',
+            marker: {color: '#355C7D'}
+        };
+        
+        var performanceLayout = {
+            barmode: 'group',
+            title: false,
+            xaxis: {title: 'Metric'},
+            yaxis: {title: 'Value'},
+            showlegend: true,
+            legend: {x: 0.7, y: 1},
+            plot_bgcolor: '#fafbfc',
+            paper_bgcolor: '#fafbfc'
+        };
+        
+        Plotly.newPlot('performanceComparison', [performanceData, performanceData2], performanceLayout, {responsive: true});
+        
+        // Feature Importance Chart with new gradient
+        var importanceData = [{
+            type: 'bar',
+            x: [0.24, 0.18, 0.12, 0.09, 0.07, 0.06, 0.05, 0.04, 0.04, 0.03],
+            y: ['human_capital_index', 'poverty_education_interaction', 'educational_efficiency', 
+                'disadvantage_index', 'teacher_salary_education', 'education_squared', 
+                'income_education_ratio', 'opportunity_gap', 'child_poverty_interaction', 'poverty_squared'],
+            orientation: 'h',
+            marker: {
+                color: [0.24, 0.18, 0.12, 0.09, 0.07, 0.06, 0.05, 0.04, 0.04, 0.03],
+                colorscale: [
+                    [0, '#F8B195'],
+                    [0.25, '#F67280'],
+                    [0.5, '#C06C84'],
+                    [0.75, '#6C5B7B'],
+                    [1, '#355C7D']
+                ],
+                showscale: true,
+                colorbar: {title: 'SHAP Value', x: 1, y: 0.5}
+            },
+            text: ['24%', '18%', '12%', '9%', '7%', '6%', '5%', '4%', '4%', '3%'],
+            textposition: 'outside'
+        }];
+        
+        var importanceLayout = {
+            title: false,
+            xaxis: {title: 'Feature Importance (SHAP Value)'},
+            yaxis: {title: ''},
+            margin: {l: 200},
+            height: 400,
+            plot_bgcolor: '#fafbfc',
+            paper_bgcolor: '#fafbfc'
+        };
+        
+        Plotly.newPlot('featureImportance', importanceData, importanceLayout, {responsive: true});
+        
+        // Interaction Features Chart
+        var interactionData = [{
+            x: ['Poverty × Education', 'Income × Education', 'Teacher Salary × Education', 'Child Poverty × Income'],
+            y: [0.18, 0.05, 0.07, 0.04],
+            type: 'bar',
+            marker: {
+                color: '#F67280'
+            },
+            text: ['18%', '5%', '7%', '4%'],
+            textposition: 'outside'
+        }];
+        
+        var interactionLayout = {
+            title: false,
+            xaxis: {title: 'Interaction Feature'},
+            yaxis: {title: 'SHAP Contribution'},
+            height: 350,
+            plot_bgcolor: '#fafbfc',
+            paper_bgcolor: '#fafbfc'
+        };
+        
+        Plotly.newPlot('interactionChart', interactionData, interactionLayout, {responsive: true});
+        
+        // Polynomial Features Chart
+        var x = [];
+        var y1 = [];
+        var y2 = [];
+        for (var i = 0; i <= 20; i++) {
+            x.push(i);
+            y1.push(i);  // Linear
+            y2.push(Math.pow(i, 2) / 20);  // Quadratic
+        }
+        
+        var polynomialData = [
+            {x: x, y: y1, type: 'scatter', mode: 'lines', name: 'Linear (Original)', line: {color: '#C06C84', width: 2}},
+            {x: x, y: y2, type: 'scatter', mode: 'lines', name: 'Quadratic (Engineered)', line: {color: '#355C7D', width: 3}}
+        ];
+        
+        var polynomialLayout = {
+            title: false,
+            xaxis: {title: 'Poverty Rate (%)'},
+            yaxis: {title: 'Impact on NAEP Score'},
+            height: 350,
+            plot_bgcolor: '#fafbfc',
+            paper_bgcolor: '#fafbfc'
+        };
+        
+        Plotly.newPlot('polynomialChart', polynomialData, polynomialLayout, {responsive: true});
+        
+        // Domain Indices Chart
+        var indicesData = [{
+            type: 'scatter',
+            x: ['Human Capital Index', 'Educational Efficiency', 'Disadvantage Index', 'Opportunity Gap'],
+            y: [0.24, 0.12, 0.09, 0.04],
+            mode: 'markers',
+            marker: {
+                size: [48, 24, 18, 8],
+                color: ['#355C7D', '#6C5B7B', '#C06C84', '#F67280']
+            },
+            text: ['24%', '12%', '9%', '4%'],
+            textposition: 'top center'
+        }];
+        
+        var indicesLayout = {
+            title: false,
+            xaxis: {title: 'Policy Index'},
+            yaxis: {title: 'Feature Importance'},
+            height: 350,
+            plot_bgcolor: '#fafbfc',
+            paper_bgcolor: '#fafbfc'
+        };
+        
+        Plotly.newPlot('indicesChart', indicesData, indicesLayout, {responsive: true});
+        
+        // Ratios Chart with new colors
+        var ratiosData = [{
+            labels: ['Income/Education Ratio', 'Teacher Effectiveness', 'Education ROI', 'Resource Balance'],
+            values: [0.05, 0.03, 0.02, 0.02],
+            type: 'pie',
+            marker: {
+                colors: ['#355C7D', '#6C5B7B', '#C06C84', '#F67280']
+            }
+        }];
+        
+        var ratiosLayout = {
+            title: false,
+            height: 350,
+            plot_bgcolor: '#fafbfc',
+            paper_bgcolor: '#fafbfc'
+        };
+        
+        Plotly.newPlot('ratiosChart', ratiosData, ratiosLayout, {responsive: true});
+        
+        // Correlation Heatmap with new colorscale
+        var correlationData = [{
+            z: [
+                [1.00, 0.82, -0.71, 0.65, -0.58, 0.43],
+                [0.82, 1.00, -0.69, 0.71, -0.52, 0.38],
+                [-0.71, -0.69, 1.00, -0.78, 0.81, -0.62],
+                [0.65, 0.71, -0.78, 1.00, -0.66, 0.55],
+                [-0.58, -0.52, 0.81, -0.66, 1.00, -0.71],
+                [0.43, 0.38, -0.62, 0.55, -0.71, 1.00]
+            ],
+            x: ['Human Capital', 'Education²', 'Poverty×Edu', 'Income Ratio', 'Disadvantage', 'Opportunity Gap'],
+            y: ['Human Capital', 'Education²', 'Poverty×Edu', 'Income Ratio', 'Disadvantage', 'Opportunity Gap'],
+            type: 'heatmap',
+            colorscale: [
+                [0, '#355C7D'],
+                [0.5, '#ffffff'],
+                [1, '#F67280']
+            ],
+            reversescale: true,
+            showscale: true
+        }];
+        
+        var correlationLayout = {
+            title: false,
+            height: 400,
+            xaxis: {tickangle: 45},
+            plot_bgcolor: '#fafbfc',
+            paper_bgcolor: '#fafbfc'
+        };
+        
+        Plotly.newPlot('correlationHeatmap', correlationData, correlationLayout, {responsive: true});
+        
+        // Policy Impact 3D Surface with new colorscale
+        var povertyRange = [];
+        var educationRange = [];
+        for (var i = 5; i <= 20; i++) povertyRange.push(i);
+        for (var j = 20; j <= 60; j++) educationRange.push(j);
+        
+        var z = [];
+        for (var i = 0; i < povertyRange.length; i++) {
+            z[i] = [];
+            for (var j = 0; j < educationRange.length; j++) {
+                // Simulated interaction effect
+                z[i][j] = 250 + educationRange[j] * 0.8 - povertyRange[i] * 1.5 + 
+                         (educationRange[j] * povertyRange[i]) * -0.02;
+            }
+        }
+        
+        var policyImpactData = [{
+            z: z,
+            x: educationRange,
+            y: povertyRange,
+            type: 'surface',
+            colorscale: [
+                [0, '#F8B195'],
+                [0.25, '#F67280'],
+                [0.5, '#C06C84'],
+                [0.75, '#6C5B7B'],
+                [1, '#355C7D']
+            ],
+            showscale: true,
+            colorbar: {title: 'NAEP Score', x: 1}
+        }];
+        
+        var policyImpactLayout = {
+            title: false,
+            scene: {
+                xaxis: {title: 'Education Rate (%)'},
+                yaxis: {title: 'Poverty Rate (%)'},
+                zaxis: {title: 'Predicted NAEP Score'},
+                camera: {eye: {x: 1.5, y: 1.5, z: 1.5}}
+            },
+            height: 500,
+            plot_bgcolor: '#fafbfc',
+            paper_bgcolor: '#fafbfc'
+        };
+        
+        Plotly.newPlot('policyImpact', policyImpactData, policyImpactLayout, {responsive: true});
+        
+        // ROI Analysis with new gradient
+        var roiData = [{
+            x: ['Early Childhood', 'Community College', 'K-12 STEM', 'Universal Meals', 'Adult Education', 'Special Ed'],
+            y: [4.2, 3.8, 3.5, 2.9, 3.2, 2.8],
+            error_y: {
+                type: 'data',
+                array: [0.3, 0.4, 0.3, 0.2, 0.3, 0.3],
+                visible: true,
+                color: '#6C5B7B'
+            },
+            type: 'bar',
+            marker: {
+                color: [4.2, 3.8, 3.5, 2.9, 3.2, 2.8],
+                colorscale: [
+                    [0, '#F8B195'],
+                    [0.5, '#C06C84'],
+                    [1, '#355C7D']
+                ],
+                showscale: true,
+                colorbar: {title: 'ROI', x: 1}
+            },
+            text: ['4.2x', '3.8x', '3.5x', '2.9x', '3.2x', '2.8x'],
+            textposition: 'outside'
+        }];
+        
+        var roiLayout = {
+            title: false,
+            xaxis: {title: 'Policy Intervention'},
+            yaxis: {title: 'Return on Investment (x)'},
+            height: 400,
+            plot_bgcolor: '#fafbfc',
+            paper_bgcolor: '#fafbfc'
+        };
+        
+        Plotly.newPlot('roiAnalysis', roiData, roiLayout, {responsive: true});
+        
+        // Pipeline Flow Diagram with new colors
+        var pipelineData = [{
+            type: "sankey",
+            orientation: "h",
+            node: {
+                pad: 15,
+                thickness: 30,
+                line: {color: "#e8d3d8", width: 0.5},
+                label: ["Raw Data", "Original Features", "Interactions", "Polynomials", "Indices", "Ratios", 
+                       "Feature Selection", "Model Training", "Predictions"],
+                color: ["#355C7D", "#6C5B7B", "#C06C84", "#F67280", "#F8B195", "#ffd3d6", 
+                       "#C06C84", "#6C5B7B", "#355C7D"]
+            },
+            link: {
+                source: [0, 1, 1, 1, 1, 2, 3, 4, 5, 6, 6, 6, 6, 7],
+                target: [1, 2, 3, 4, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8],
+                value: [10, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 10],
+                color: 'rgba(192, 108, 132, 0.2)'
+            }
+        }];
+        
+        var pipelineLayout = {
+            title: false,
+            font: {size: 10},
+            height: 400,
+            plot_bgcolor: '#fafbfc',
+            paper_bgcolor: '#fafbfc'
+        };
+        
+        Plotly.newPlot('pipelineFlow', pipelineData, pipelineLayout, {responsive: true});
+        
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            var tabContents = document.getElementsByClassName('tab-content');
+            for (var i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            // Remove active class from all tabs
+            var tabs = document.getElementsByClassName('tab');
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
