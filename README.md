@@ -1,13 +1,34 @@
+
+
+# 🎯 [CLICK HERE FOR LIVE INTERACTIVE PRESENTATION](https://rosalinatorres888.github.io/ma-education-policy-analysis/) 🎯
+
+</div>
+
+---
+
 # 📊 Massachusetts Education Policy Analysis: Data-Driven Insights for Strategic Investment
 
 [![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange.svg)](https://jupyter.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Data: Government](https://img.shields.io/badge/Data-Government%20Sources-green.svg)](https://www.naep.gov)
+[![Live Demo](https://img.shields.io/badge/Live-Presentation-ff69b4.svg)](https://rosalinatorres888.github.io/ma-education-policy-analysis/)
+
+<div align="center">
+  <h2>
+    🌐 <a href="https://rosalinatorres888.github.io/ma-education-policy-analysis/">View Live Interactive Presentation</a> | 
+    📊 <a href="https://github.com/rosalinatorres888/ma-education-policy-analysis">GitHub Repository</a>
+  </h2>
+</div>
 
 ## 🎯 Executive Summary
 
 This repository contains a comprehensive data-driven analysis of Massachusetts education policy, leveraging machine learning and advanced analytics to uncover actionable insights for maximizing both academic outcomes and economic returns on educational investment.
+
+**🔗 Quick Access:**
+- [**View Live Presentation**](https://rosalinatorres888.github.io/ma-education-policy-analysis/) - Interactive web visualization
+- [**GitHub Repository**](https://github.com/rosalinatorres888/ma-education-policy-analysis) - Source code and data
+- [**Download Report**](reports/executive_summary.pdf) - Executive summary PDF
 
 **Key Question:** How can strategic investment in Massachusetts education policy maximize both academic outcomes and economic returns?
 
@@ -90,7 +111,8 @@ ma-education-policy-analysis/
 ├── 📄 reports/
 │   ├── technical_report.pdf  # Detailed methodology and findings
 │   ├── executive_summary.pdf # High-level insights for stakeholders
-│   └── presentations/        # Slide decks for various audiences
+│   ├── presentations/        # Slide decks for various audiences
+│   └── 🌐 [Live Web Presentation](https://rosalinatorres888.github.io/ma-education-policy-analysis/)
 │
 ├── 🧪 tests/                 # Unit tests for data validation
 ├── requirements.txt          # Python dependencies
@@ -108,6 +130,11 @@ ma-education-policy-analysis/
 - Git
 
 ### Quick Start
+
+#### 🌐 View Online
+Visit the [**Live Interactive Presentation**](https://rosalinatorres888.github.io/ma-education-policy-analysis/) for immediate access to visualizations and insights.
+
+#### 💻 Run Locally
 ```bash
 # Clone the repository
 git clone https://github.com/rosalinatorres888/ma-education-policy-analysis.git
@@ -137,6 +164,7 @@ jupyter notebook
 - **Matplotlib & Seaborn** - Statistical visualizations
 - **Plotly** - Interactive dashboards
 - **Folium** - Geospatial mapping
+- **GitHub Pages** - [Live web presentation hosting](https://rosalinatorres888.github.io/ma-education-policy-analysis/)
 
 ### Development Tools
 - **Jupyter Notebooks** - Interactive development
@@ -176,6 +204,17 @@ Based on our ML-driven analysis, we recommend:
 | Linear Regression | ROI Estimation | - | - | 0.12 |
 | ARIMA | Enrollment Forecasting | - | - | 0.08 |
 
+## 🎥 Interactive Demo & Presentations
+
+### 🌐 [**Live Interactive Presentation**](https://rosalinatorres888.github.io/ma-education-policy-analysis/)
+Experience the full analysis with interactive visualizations, detailed findings, and policy recommendations through our GitHub Pages hosted presentation.
+
+**Features:**
+- Interactive data visualizations
+- Comprehensive policy analysis walkthrough
+- Key findings and recommendations
+- Mobile-responsive design for accessibility
+
 ## 🔮 Future Work
 
 - [ ] Implement deep learning models for complex pattern recognition
@@ -212,11 +251,17 @@ Aspiring ML/AI Engineer | Education Policy Enthusiast
 - 📧 Email: [torres.ros@northeastern.edu](mailto:torres.ros@northeastern.edu)
 - 💼 LinkedIn: [linkedin.com/in/rosalina2](https://www.linkedin.com/in/rosalina2)
 - 🐙 GitHub: [@rosalinatorres888](https://github.com/rosalinatorres888)
+- 🌐 Live Project: [MA Education Policy Analysis](https://rosalinatorres888.github.io/ma-education-policy-analysis/)
 
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## 🙏 Acknowledgments
+
+- Massachusetts Department of Elementary and Secondary Education for data access
+- Northeastern University faculty advisors for guidance
+- Open-source community for analytical tools and frameworks
 
 ---
 
