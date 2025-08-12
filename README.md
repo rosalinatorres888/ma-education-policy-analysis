@@ -51,18 +51,12 @@ This project leverages **advanced machine learning techniques** and **interpreta
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Python 3.9+
-- pip or conda package manager
-
-### Installation
-
 ```bash
 # Clone the repository
 git clone https://github.com/rosalinatorres888/ma-education-policy-analysis.git
 cd ma-education-policy-analysis
 
-# Create virtual environment (recommended)
+# Create virtual environment
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
@@ -70,10 +64,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
 # Run the analysis
-python run_analysis.py
-
-# Launch interactive dashboard (optional)
-streamlit run app/dashboard.py
+python src/main.py]
 
 ## 📈 Results & Key Findings
 
@@ -86,4 +77,3 @@ streamlit run app/dashboard.py
 | **MAE** | 2.4 points | Mean absolute error |
 | **Cross-Validation** | 5-fold | Consistent performance across folds |
 
-### Feature Importance (SHAP Analysis)
