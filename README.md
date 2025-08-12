@@ -217,11 +217,6 @@ Aspiring ML/AI Engineer | Education Policy Enthusiast
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
-
-- Massachusetts Department of Elementary and Secondary Education for data access
-- Northeastern University faculty advisors for guidance
-- Open-source community for analytical tools and frameworks
 
 ---
 
